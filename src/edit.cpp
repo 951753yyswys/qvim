@@ -37,6 +37,7 @@ namespace Edit {
 					//DebugLog<<y<<std::endl;
 					//DebugLog.close();
 					BUFFER.DeleteLine(y);
+					ROW_FACT--;
 				}
 				continue;
 			}
