@@ -28,7 +28,10 @@ enum KeyCode {
     KEY_DOWN = 257,
     KEY_LEFT = 258,
     KEY_RIGHT = 259,
-	KEY_END = 260
+	KEY_END = 260,
+	KEY_HOME = 261,
+	KEY_PAGEUP = 262,
+	KEY_PAGEDOWN = 263
 };
 
 // 最简单的 getch 函数
@@ -97,6 +100,15 @@ int getchex() {
                     case 'C': return KEY_RIGHT;
                     case 'D': return KEY_LEFT;
 					case 'F': return KEY_END;
+					case 'H': return KEY_HOME;
+					case '5': {
+						char Tmp=getchar();
+						return KEY_PAGEUP;
+					}
+					case '6': {
+						char Tmp=getchar();
+						return KEY_PAGEDOWN;
+					}
                 }
             } else if (second_char != -1) {
                 // 有其他字符，但不是方向键
@@ -238,6 +250,27 @@ int main(int argc,char* argv[]) {
 				Cur.Move(BUFFER.LineSize(Cur.Place_fact().second),Cur.Place_screen().second);
 			}
 		}
+		else if(Chr==KEY_HOME) {
+			for(auto &Cur:CURSORS) {
+				Cur.Move(0,Cur.Place_screen().second);
+			}
+		}
+		else if(Chr==KEY_PAGEUP) {
+			if(CURSORS.size()==1) {
+				tui::draw();
+				auto &Cur=*CURSORS.begin();
+				auto [x,y]=Cur.Place_fact();
+				if(y>TUI_ROW) {
+					Cur.Move_fact(BUFFER.LineSize(y-TUI_ROW),std::max(0,y-TUI_ROW)),ROW_BEGIN-=TUI_ROW;
+					Cur.Move(std::min(x,Cur.Place_screen().first),Cur.Place_screen().second);
+				}
+				else 
+					Cur.Move(std::min(BUFFER.LineSize(0),x),0);
+				//cout<<"Up"<<flush;
+				//usleep(300000);
+
+			} 
+		}
 		else if(Chr==4) {
 			std::ofstream outFile(FileName.c_str(),std::ios::trunc);
 			for(int i=0;i<BUFFER.size();i++) {
@@ -246,7 +279,7 @@ int main(int argc,char* argv[]) {
 				for(int i=0;i<Str.size();i++) 
 					if(Str[i]!=0)
 						outFile<<Str[i];
-				outFile<<endl;
+				if(i+1<BUFFER.size()) outFile<<endl;
 			}
 			outFile.close();
 			cout<<"File Write!"<<flush;
@@ -254,8 +287,8 @@ int main(int argc,char* argv[]) {
 		}
 		else Edit::Insert((char)Chr);
 		for(auto &Cur:CURSORS) {
-			auto [x,y]=Cur.Place_screen();
-			if(x>BUFFER.LineSize(y)) Cur.Move(BUFFER.LineSize(y),y);
+			auto [x,y]=Cur.Place_fact();
+			if(x>BUFFER.LineSize(y)) Cur.Move(BUFFER.LineSize(y),Cur.Place_screen().second);
 		} 
 		tui::draw();
 		//getTerminalSizeWithIoctl();
