@@ -152,7 +152,7 @@ int main(int argc,char* argv[]) {
 		Help::GetHelp();
 		return 0;
 	}
-	std::ofstream DeBugLogs("qvim.log",std::ios::trunc);
+	//std::ofstream DeBugLogs("qvim.log",std::ios::trunc);
 	cout<<"\x1b[?1049h"<<flush;
 	tui::getTerminalSize();
 	CURSORS.push_back(Cursor());
@@ -166,7 +166,7 @@ int main(int argc,char* argv[]) {
 	else {
 		std::string Line;
 		while(std::getline(inFile,Line)) {
-			DeBugLogs<<"Line:"<<ROW_FACT<<" Str:"<<Line<<endl;
+			//DeBugLogs<<"Line:"<<ROW_FACT<<" Str:"<<Line<<endl;
 			std::string Ins="";
 			for(char c:Line) {
 				if(c==9) 
@@ -187,14 +187,17 @@ int main(int argc,char* argv[]) {
 	cin>>std::noskipws;
 	for(auto &Cur:CURSORS)
 		Cur.Move(0,0),Cur.Move_fact(0,0);
-	DeBugLogs<<"TUI size:"<<TUI_COL<<' '<<TUI_ROW<<endl;
-	DeBugLogs<<"File rows:"<<ROW_FACT<<endl;
+	//DeBugLogs<<"TUI size:"<<TUI_COL<<' '<<TUI_ROW<<endl;
+	//DeBugLogs<<"File rows:"<<ROW_FACT<<endl;
+	//DeBugLogs<<"First Line:"<<BUFFER.ReadLine(0)<<endl;
 	tui::draw();
 	while(1) {
-		for(auto Cur:CURSORS) {
-			DeBugLogs<<"Cursor Place:("<<Cur.Place_fact().first<<","<<Cur.Place_fact().second<<")"<<endl;
-			DeBugLogs<<"Cursor Screen:("<<Cur.Place_screen().first<<","<<Cur.Place_screen().second<<")"<<endl;
-		}
+		//for(auto Cur:CURSORS) {
+			//DeBugLogs<<"Cursor Place:("<<Cur.Place_fact().first<<","<<Cur.Place_fact().second<<")"<<endl;
+			//DeBugLogs<<"Cursor Screen:("<<Cur.Place_screen().first<<","<<Cur.Place_screen().second<<")"<<endl;
+			//DeBugLogs<<"ROW_BEGIN:"<<ROW_BEGIN<<endl;
+			//DeBugLogs<<"ROW_END:"<<ROW_END<<endl;
+		//}
 		int Chr;
 		Chr=getchex();
 		if(Chr==KEY_ESC) break;
@@ -206,13 +209,13 @@ int main(int argc,char* argv[]) {
 		else if(Chr==127) Edit::Delete();
 		else if(Chr==KEY_UP) {
 			for(auto &Cur:CURSORS) {
-				if(Cur.Place_screen().second>0) 
+				if(Cur.Place_screen().second>=0) 
 					Cur.Up();
 			}
 		}
 		else if(Chr==KEY_DOWN) {
 			for(auto &Cur:CURSORS) {
-				if(Cur.Place_screen().second<BUFFER.size()-1)
+				if(Cur.Place_screen().second<ROW_FACT-1)
 					Cur.Down();
 			}
 		}
@@ -248,7 +251,7 @@ int main(int argc,char* argv[]) {
 			if(x>BUFFER.LineSize(y)) Cur.Move(BUFFER.LineSize(y),y);
 		} 
 		tui::draw();
-		getTerminalSizeWithIoctl();
+		//getTerminalSizeWithIoctl();
 	}
 	cout<<std::skipws;
 	cout<<"\x1b[?1049l"<<flush;

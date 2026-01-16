@@ -18,7 +18,7 @@ void Cursor::Down() {//Cursor down
 	std::cout<<"\x1b[1B"<<std::flush;
 	if(Y_fact<ROW_FACT-1) {
 		Y_fact++;
-		if(Y_fact<TUI_ROW-1) Y_screen++;
+		if(Y_fact<ROW_END+1) Y_screen++;
 		else ROW_BEGIN++;
 	}		
 }

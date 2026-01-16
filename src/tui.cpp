@@ -18,11 +18,10 @@ namespace tui {
 		std::cout<<"\x1b[2J";
 		std::cout<<"\x1b[1;1H";
 		getTerminalSize();
-		ROW_END=std::min(ROW_BEGIN+TUI_ROW-1,ROW_FACT-1);
+		ROW_END=std::min(ROW_BEGIN+TUI_ROW-2,ROW_FACT-1);
 		for(int i=ROW_BEGIN;i<=ROW_END;i++) {
-			std::cout<<BUFFER.ReadLine(i)<<'\n';
+			std::cout<<BUFFER.ReadLine(i)<<std::endl;
 		}
-		std::cout<<std::flush;
 		auto [X,Y]=(*CURSORS.begin()).Place_screen();
 		std::cout<<"\x1b["<<Y+1<<';'<<X+1<<'H'<<std::flush;
 	}

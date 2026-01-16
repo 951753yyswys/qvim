@@ -7,7 +7,8 @@ Buffer::Buffer():ID(BufferID),Lines(),Size(0){};
 Buffer::~Buffer()=default;
 void Buffer::DeleteLine(int Line) {//Delete a hole line 
 	Size--;
-	for(int i=Size-1;i>=Line;i--) {
+	Lines[Line].reset();
+	for(int i=Line;i<Size;i++) {
 		Lines[i]=std::move(Lines[i+1]);
 	}
 	Lines.pop_back();
@@ -23,7 +24,7 @@ void Buffer::Insert(int Line,int Pos,std::string InsertStr) {//Insert the Str to
 	}
 }
 std::string Buffer::ReadLine(int Line) {//Get a hole line 
-	return Lines[Line]->Read(0,Lines[Line]->size());
+	return Lines[Line]->Read(0,Lines[Line]->size()-1);
 }
 std::string Buffer::Read(int Line,int Begin,int End) {//Read the [Begin,End] chars in Line 
 	if(Begin<=End) {
