@@ -27,7 +27,8 @@ enum KeyCode {
     KEY_UP = 256,
     KEY_DOWN = 257,
     KEY_LEFT = 258,
-    KEY_RIGHT = 259
+    KEY_RIGHT = 259,
+	KEY_END = 260
 };
 
 // 最简单的 getch 函数
@@ -95,6 +96,7 @@ int getchex() {
                     case 'B': return KEY_DOWN;
                     case 'C': return KEY_RIGHT;
                     case 'D': return KEY_LEFT;
+					case 'F': return KEY_END;
                 }
             } else if (second_char != -1) {
                 // 有其他字符，但不是方向键
@@ -229,6 +231,11 @@ int main(int argc,char* argv[]) {
 			for(auto &Cur:CURSORS) {
 				if(Cur.Place_screen().first<BUFFER.LineSize(Cur.Place_fact().second))
 					Cur.Right();
+			}
+		}
+		else if(Chr==KEY_END) {
+			for(auto &Cur:CURSORS) {
+				Cur.Move(BUFFER.LineSize(Cur.Place_fact().second),Cur.Place_screen().second);
 			}
 		}
 		else if(Chr==4) {
